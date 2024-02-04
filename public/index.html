@@ -142,61 +142,73 @@
             };
 
         function createD3Chart() {
-            const svg = d3.select("#d3Chart")
-        .append("svg")
-        .attr("width", 400)
-        .attr("height", 400);
 
-    const radius = Math.min(400, 400) / 2;
+            var width = 960,
+            height = 450
+            radius = Math.min(width, height) / 2;
 
-    const pie = d3.pie()
-        .sort(null)
-        .value((d) => d);
+            var svg = d3.select("#d3Chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
 
-    const arc = d3.arc()
-        .innerRadius(0)
-        .outerRadius(radius);
+            var pie = d3.pie()
+                .sort(null)
+                .value(function(d) { 
+                    return d; 
+                });
 
-    const colors = dataSource.datasets[0].backgroundColor;
+            var arc = d3.arc()
+                .outerRadius(radius * 0.8)
+                .innerRadius(radius * 0.4);
 
-    const g = svg.append("g")
-        .attr("transform", "translate(200,200)");
+            var colors = dataSource.datasets[0].backgroundColor;
 
-    const data = dataSource.datasets[0].data;
+            // var g = svg.append("g")
+            //     .attr("transform", "translate(200,200)");
 
-    const pieData = pie(data);
+            var g = svg
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    const arcGroup = g.selectAll(".arc")
-        .data(pieData)
-        .enter()
-        .append("g")
-        .attr("class", "arc");
+            const data = dataSource.datasets[0].data;
 
-    arcGroup.append("path")
-        .attr("d", arc)
-        .attr("fill", (d, i) => colors[i]);
+            const pieData = pie(data);
 
-    const legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", "translate(250, 100)");
+            const arcGroup = g.selectAll(".arc")
+                .data(pieData)
+                .enter()
+                .append("g")
+                .attr("class", "arc");
 
-    legend.selectAll("rect")
-        .data(dataSource.labels)
-        .enter()
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * 20)
-        .attr("width", 18)
-        .attr("height", 18)
-        .attr("fill", (d, i) => colors[i]);
+            arcGroup.append("path")
+                .attr("d", arc)
+                .attr("fill", (d, i) => colors[i]);
 
-    legend.selectAll("text")
-        .data(dataSource.labels)
-        .enter()
-        .append("text")
-        .attr("x", 25)
-        .attr("y", (d, i) => i * 20 + 9)
-        .text((d) => d);
+                //REPLACE LEGEND
+                
+            // const legend = svg.append("g")
+            //     .attr("class", "legend")
+            //     .attr("transform", "translate(250, 100)");
+
+            // legend.selectAll("rect")
+            //     .data(dataSource.labels)
+            //     .enter()
+            //     .append("rect")
+            //     .attr("x", 0)
+            //     .attr("y", (d, i) => i * 20)
+            //     .attr("width", 18)
+            //     .attr("height", 18)
+            //     .attr("fill", (d, i) => colors[i]);
+
+            // legend.selectAll("text")
+            //     .data(dataSource.labels)
+            //     .enter()
+            //     .append("text")
+            //     .attr("x", 25)
+            //     .attr("y", (d, i) => i * 20 + 9)
+            //     .text((d) => d);
+
             // const svg = d3.select("#d3Chart")
             //     .append("svg")
             //     .attr("width", 400)
