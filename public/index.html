@@ -167,13 +167,33 @@
                 labels: []
             };
     
+        // function getBudget() {
+        //     axios.get('/budget')
+        //         .then(function (res) {
+        //             for (var i = 0; i < res.data.myBudget.length; i++) {
+        //                 dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+        //                 dataSource.labels[i] = res.data.myBudget[i].title;
+        //             }
+        //             createD3Chart();
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error);
+        //         });
+        // }
+
         function getBudget() {
             axios.get('/budget')
                 .then(function (res) {
-                    for (var i = 0; i < res.data.myBudget.length; i++) {
-                        dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                        dataSource.labels[i] = res.data.myBudget[i].title;
-                    }
+                    dataSource.datasets[0].data = []; // Ensure the data array is empty before adding new data
+                    dataSource.datasets[0].backgroundColor = []; // Ensure the backgroundColor array is empty
+                    dataSource.labels = []; // Ensure the labels array is empty
+
+                    res.data.forEach(function(item) {
+                        dataSource.datasets[0].data.push(item.budget);
+                        dataSource.datasets[0].backgroundColor.push(item.color);
+                        dataSource.labels.push(item.title);
+                    });
+
                     createD3Chart();
                 })
                 .catch(function (error) {
@@ -184,10 +204,9 @@
         getBudget();
 
         function loadData() {
-            var data = dataSource.datasets[0].data.map(function(value, index) {
-                return { label: dataSource.labels[index], value: value };
+            return dataSource.datasets[0].data.map(function(value, index) {
+                return { label: dataSource.labels[index], value: value, color: dataSource.datasets[0].backgroundColor[index] };
             });
-            return data;
         }
 
         function createD3Chart() {
@@ -226,9 +245,10 @@
             svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
         
             var key = function(d){ return d.data.label; };
-        
+
             var color = d3.scale.ordinal()
-                .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+                .domain(data.map(d => d.label))
+                .range(dataSource.datasets[0].backgroundColor);
         
             function change(data) {
         
