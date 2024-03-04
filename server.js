@@ -42,20 +42,3 @@ app.post('/budget', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-
-// const budget = {
-//     myBudget: [
-//         {
-//             title: 'Eat out',
-//             budget: 25
-//         },
-//         {
-//             title: 'Rent',
-//             budget: 275
-//         },
-//         {
-//             title: 'Grocery',
-//             budget: 110
-//         },
-//     ]
-// };
